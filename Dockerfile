@@ -1,4 +1,4 @@
-FROM 310189683227.dkr.ecr.us-east-1.amazonaws.com/bia
+FROM node:21-slim
 
 RUN npm install -g npm@latest --loglevel=error
 WORKDIR /usr/src/app

@@ -1,3 +1,4 @@
+import React from "react";
 import { useLocation } from "react-router-dom";
 import Button from "./Button";
 
@@ -9,8 +10,8 @@ const Header = ({ title, onAdd, showAdd }) => {
       {/* <h3>process.env.EMAIL_ALUNO</h3> */}
       {location.pathname === "/" && (
         <Button
-          color={showAdd ? "red" : "green"}
-          text={showAdd ? "Fechar" : "Adicionar"}
+          color={showAdd ? "red" : "black"}
+          text={showAdd ? "Close" : "Add"}
           onClick={onAdd}
         />
       )}
@@ -19,7 +20,7 @@ const Header = ({ title, onAdd, showAdd }) => {
 };
 
 Header.defaultProps = {
-  title: "BIA 2022",
+  title: "BIA 2024",
 };
 
 export default Header;
