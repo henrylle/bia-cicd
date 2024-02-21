@@ -3,13 +3,12 @@ version: 0.2
 phases:
   install:
     commands:
+      - echo Installing Node 21 e npm...
       - curl -fsSL https://rpm.nodesource.com/setup_21.x | sudo bash -
       - sudo yum install -y nodejs
-  pre_build:
-    commands:
   build:
     commands:
       - npm install --loglevel=error
       - REACT_APP_API_URL=http://localhost:3001 SKIP_PREFLIGHT_CHECK=true npm run build --prefix client
-      - echo Iniciando testes unitários...
+      - Rodando testes unitários
       - npm test
