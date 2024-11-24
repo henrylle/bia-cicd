@@ -1,0 +1,1 @@
+Precisa trocar o repositorio ecr para o seu quando for rodar o build e pre build. Senao bate no original da bia e não vai.
