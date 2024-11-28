@@ -1,27 +1,26 @@
-version: "3"
 services:
   server:
     build: .
     container_name: bia
     ports:
-      - 3001:8080
+      - 80:8080
     links:
       - database
     environment:
       DB_USER: postgres
       DB_PWD: postgres
-      DB_HOST: database
+      DB_HOST: database-plan10des2.c1g4ii6ssn81.us-east-1.rds.amazonaws.com
       DB_PORT: 5432
-  database:
-    image: postgres:16.1
-    container_name: database
-    environment:
-      - "POSTGRES_USER=postgres"
-      - "POSTGRES_PASSWORD=postgres"
-      - "POSTGRES_DB=bia"
-    ports:
-      - 5433:5432
-    volumes:
-      - db:/var/lib/postgresql/data
-volumes:
-  db:
+# # NAO PRECISA NO BOOTCAMP DAQUI PRA BAIXO ##
+      DB_SECRET_NAME: rds!db-bb91e4db-aedb-43b2-93c2-e83d07ff3e82
+      DB_REGION: us-east-1 
+      # AWS_ACCESS_KEY_ID: 
+      # AWS_SECRET_ACCESS_KEY:
+      DEBUG_SECRET: true
+      # IS_LOCAL: true 
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8080/api/versao"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 5s     
