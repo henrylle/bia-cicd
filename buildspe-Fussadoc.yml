@@ -1,0 +1,54 @@
+version: 0.2
+
+env:
+  variables:
+    APP_VERSION: "1.0.0"
+    AWS_REGION: "us-east-1"
+phases:
+  install:
+    commands:
+      - echo Instalando dependências...
+      - npm install
+      - npm install -g trivy
+  pre_build:
+    commands:
+      - echo Fazendo login no ECR...
+      - aws --version
+      - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.#AWS_REGION.amazonaws.com/bia
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${APP_VERSION}-$(COMMIT_HASH)
+      - echo $IMAGE_TAG
+      #- IMAGE_TAG=${APP_VERSION}-$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    commands:
+      - echo Build iniciado em `date`
+      - echo Gerando imagem da BIA...
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - echo Build finalizado em `date`
+  test:
+    commands:
+      - echo Testes iniciados em `date`
+      - echo Executando testes...
+      - docker run -e CI=true $REPOSITORY_URI:latest npm run test
+      - echo Testes finalizados em `date`
+      - echo Inicializando testes de Vunerabilidade... em `date`
+      - docker run -e CI=true $REPOSITORY_URI:latest npm run test:security
+      - docker run --rm aquasec/trivy image --exit-code 1 $REPOSITORY_URI:$IMAGE_TAG
+      - echo Finalizando testes de Vunerabilidade... em `date`
+  post_build:
+    commands:
+      - echo Fazendo push da imagem para o ECR...
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Gerando artefato da imagem para o ECS
+      - printf '[{"name":"bia","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+artifacts:
+  files: imagedefinitions.json
+
+
+
+  #Tenho que melhorar
