@@ -1,26 +1,31 @@
 {
   "name": "bia",
   "version": "1.0.1",
-  "description": "### Período do evento: 18 a 24 de Março/2024 (Online e ao vivo às 20h)",
+  "description": "### Período do evento: 18 de Dezembro a 02 de Fevereiro/2025",
   "main": "index.js",
   "scripts": {
     "test": "jest tests/unit",
-    "start": "node server"
+    "test:integration": "jest tests/integration",
+    "start": "node server",
+    "db:test": "node scripts/test-db-connection.js",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/henrylle/bia.git"
+    "url": "git+https://github.com/valmir2383/bia.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/henrylle/bia/issues"
+    "url": "https://github.com/valmir2383/bia/issues"
   },
-  "homepage": "https://github.com/henrylle/bia#readme",
+  "homepage": "https://github.com/valmir2383/bia#readme",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "aws-sdk": "^2.1691.0",
     "config": "^3.3.6",
     "cors": "^2.8.5",
     "ejs": "^3.1.6",
@@ -38,6 +43,7 @@
     "react-router-dom": "^5.3.0",
     "react-scripts": "^5.0.1",
     "sequelize": "^6.6.5",
+    "supertest": "^6.1.6",
     "web-vitals": "^1.0.1"
   },
   "eslintConfig": {
