@@ -1,22 +1,24 @@
 {
   "name": "bia",
   "version": "1.0.1",
-  "description": "### Período do evento: 18 a 24 de Março/2024 (Online e ao vivo às 20h)",
+  "description": "### Período do evento: 18 de Dezembro a 02 de Fevereiro/2025",
   "main": "index.js",
   "scripts": {
-    "test": "jest tests/unit",
-    "start": "node server"
+    "test": "jest tests/unit/controllers",
+    "start": "node server",
+    "migrate": "npx sequelize-cli db:migrate",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/henrylle/bia.git"
+    "url": "git+https://github.com/valmir2383/bia.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/henrylle/bia/issues"
+    "url": "https://github.com/valmir2383/bia/issues"
   },
-  "homepage": "https://github.com/henrylle/bia#readme",
+  "homepage": "https://github.com/valmir2383/bia#readme",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

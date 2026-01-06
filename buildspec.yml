@@ -1,17 +1,35 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo Installing dependencies...
+      - yum update -y
+      - yum install -y jq postgresql15
   pre_build:
     commands:
       - echo Fazendo login no ECR...
       - aws --version
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 310189683227.dkr.ecr.us-east-1.amazonaws.com
-      - REPOSITORY_URI=310189683227.dkr.ecr.us-east-1.amazonaws.com/bia
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 3804826263064.dkr.ecr.us-east-1.amazonaws.com
+      - REPOSITORY_URI=3804826263064.dkr.ecr.us-east-1.amazonaws.com/bia
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - echo Carregando credenciais do banco...
+      - chmod +x scripts/load-db-secrets.sh
+      - source scripts/load-db-secrets.sh
+      - echo Instalando dependências...
+      - npm install --loglevel=error
   build:
     commands:
       - echo Build iniciado em `date`
+      - echo Executando testes unitários...
+      - NODE_ENV=test npm test
+      - echo Executando migrations...
+      - NODE_ENV=production npx sequelize-cli db:migrate
+      - echo Gerando build do frontend...
+      - REACT_APP_API_URL=http://localhost:3001 SKIP_PREFLIGHT_CHECK=true npm run build --prefix client
       - echo Gerando imagem da BIA...
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
