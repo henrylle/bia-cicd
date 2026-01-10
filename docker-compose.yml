@@ -25,3 +25,4 @@ services:
       - db:/var/lib/postgresql/data
 volumes:
   db:
+  
